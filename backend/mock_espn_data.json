@@ -1,0 +1,318 @@
+{
+  "leagues": [
+    {
+      "id": "28",
+      "uid": "s:20~l:28",
+      "name": "National Football League",
+      "abbreviation": "NFL",
+      "season": {
+        "year": 2025,
+        "type": 2,
+        "displayName": "Regular Season"
+      }
+    }
+  ],
+  "season": {
+    "year": 2025,
+    "type": 2,
+    "displayName": "Regular Season"
+  },
+  "week": {
+    "number": 13
+  },
+  "events": [
+    {
+      "id": "401671890",
+      "uid": "s:20~l:28~e:401671890",
+      "date": "2025-11-28T17:30Z",
+      "name": "Chicago Bears at Detroit Lions",
+      "shortName": "CHI @ DET",
+      "season": {
+        "year": 2025,
+        "type": 2
+      },
+      "competitions": [
+        {
+          "id": "401671890",
+          "uid": "s:20~l:28~e:401671890~c:401671890",
+          "date": "2025-11-28T17:30Z",
+          "attendance": 0,
+          "type": {
+            "id": "1"
+          },
+          "timeValid": true,
+          "neutralSite": false,
+          "conferenceCompetition": false,
+          "playByPlayAvailable": false,
+          "recent": false,
+          "venue": {
+            "id": "3558",
+            "fullName": "Ford Field",
+            "address": {
+              "city": "Detroit",
+              "state": "MI"
+            },
+            "capacity": 65000,
+            "indoor": true
+          },
+          "competitors": [
+            {
+              "id": "8",
+              "uid": "s:20~l:28~t:8",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "8",
+                "uid": "s:20~l:28~t:8",
+                "location": "Detroit",
+                "name": "Lions",
+                "abbreviation": "DET",
+                "displayName": "Detroit Lions",
+                "shortDisplayName": "Lions",
+                "color": "0076B6",
+                "alternateColor": "B0B7BC",
+                "isActive": true,
+                "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/det.png"
+              },
+              "score": "0",
+              "statistics": [],
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "10-1"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "uid": "s:20~l:28~t:3",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "3",
+                "uid": "s:20~l:28~t:3",
+                "location": "Chicago",
+                "name": "Bears",
+                "abbreviation": "CHI",
+                "displayName": "Chicago Bears",
+                "shortDisplayName": "Bears",
+                "color": "0B162A",
+                "alternateColor": "C83803",
+                "isActive": true,
+                "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png"
+              },
+              "score": "0",
+              "statistics": [],
+              "records": [
+                {
+                  "name": "overall",
+                  "abbreviation": "Total",
+                  "type": "total",
+                  "summary": "4-7"
+                }
+              ]
+            }
+          ],
+          "notes": [],
+          "status": {
+            "clock": 0,
+            "displayClock": "0:00",
+            "period": 0,
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "completed": false,
+              "description": "Scheduled",
+              "detail": "Thu, Nov 28 - 12:30 PM EST",
+              "shortDetail": "11/28 - 12:30 PM EST"
+            }
+          },
+          "broadcasts": [
+            {
+              "market": "national",
+              "names": ["CBS"]
+            }
+          ],
+          "odds": [
+            {
+              "provider": {
+                "id": "45",
+                "name": "DraftKings",
+                "priority": 2
+              },
+              "details": "DET -10.5",
+              "overUnder": 48.5,
+              "spread": -10.5,
+              "overOdds": -110,
+              "underOdds": -110,
+              "moneyLine": -450,
+              "awayTeamOdds": {
+                "moneyLine": 350,
+                "spreadOdds": -110
+              },
+              "homeTeamOdds": {
+                "moneyLine": -450,
+                "spreadOdds": -110
+              }
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "language": "en-US",
+          "rel": ["summary"],
+          "href": "https://www.espn.com/nfl/game/_/gameId/401671890"
+        }
+      ],
+      "status": {
+        "clock": 0,
+        "displayClock": "0:00",
+        "period": 0,
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "completed": false,
+          "description": "Scheduled",
+          "detail": "Thu, Nov 28 - 12:30 PM EST"
+        }
+      }
+    },
+    {
+      "id": "401671891",
+      "uid": "s:20~l:28~e:401671891",
+      "date": "2025-11-28T21:30Z",
+      "name": "New York Giants at Dallas Cowboys",
+      "shortName": "NYG @ DAL",
+      "season": {
+        "year": 2025,
+        "type": 2
+      },
+      "competitions": [
+        {
+          "id": "401671891",
+          "uid": "s:20~l:28~e:401671891~c:401671891",
+          "date": "2025-11-28T21:30Z",
+          "venue": {
+            "id": "3816",
+            "fullName": "AT&T Stadium",
+            "address": {
+              "city": "Arlington",
+              "state": "TX"
+            },
+            "capacity": 80000,
+            "indoor": true
+          },
+          "competitors": [
+            {
+              "id": "6",
+              "uid": "s:20~l:28~t:6",
+              "type": "team",
+              "order": 0,
+              "homeAway": "home",
+              "team": {
+                "id": "6",
+                "uid": "s:20~l:28~t:6",
+                "location": "Dallas",
+                "name": "Cowboys",
+                "abbreviation": "DAL",
+                "displayName": "Dallas Cowboys",
+                "shortDisplayName": "Cowboys",
+                "color": "003594",
+                "alternateColor": "869397",
+                "isActive": true,
+                "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/dal.png"
+              },
+              "score": "0",
+              "records": [
+                {
+                  "name": "overall",
+                  "type": "total",
+                  "summary": "4-7"
+                }
+              ]
+            },
+            {
+              "id": "19",
+              "uid": "s:20~l:28~t:19",
+              "type": "team",
+              "order": 1,
+              "homeAway": "away",
+              "team": {
+                "id": "19",
+                "uid": "s:20~l:28~t:19",
+                "location": "New York",
+                "name": "Giants",
+                "abbreviation": "NYG",
+                "displayName": "New York Giants",
+                "shortDisplayName": "Giants",
+                "color": "0B2265",
+                "alternateColor": "A71930",
+                "isActive": true,
+                "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png"
+              },
+              "score": "0",
+              "records": [
+                {
+                  "name": "overall",
+                  "type": "total",
+                  "summary": "2-9"
+                }
+              ]
+            }
+          ],
+          "status": {
+            "type": {
+              "id": "1",
+              "name": "STATUS_SCHEDULED",
+              "state": "pre",
+              "description": "Scheduled",
+              "detail": "Thu, Nov 28 - 4:30 PM EST"
+            }
+          },
+          "broadcasts": [
+            {
+              "market": "national",
+              "names": ["FOX"]
+            }
+          ],
+          "odds": [
+            {
+              "provider": {
+                "id": "45",
+                "name": "DraftKings"
+              },
+              "details": "DAL -3.5",
+              "overUnder": 37.5,
+              "spread": -3.5,
+              "moneyLine": -175,
+              "awayTeamOdds": {
+                "moneyLine": 145,
+                "spreadOdds": -110
+              },
+              "homeTeamOdds": {
+                "moneyLine": -175,
+                "spreadOdds": -110
+              }
+            }
+          ]
+        }
+      ],
+      "status": {
+        "type": {
+          "id": "1",
+          "name": "STATUS_SCHEDULED",
+          "state": "pre",
+          "description": "Scheduled",
+          "detail": "Thu, Nov 28 - 4:30 PM EST"
+        }
+      }
+    }
+  ]
+}
