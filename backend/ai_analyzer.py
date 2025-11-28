@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 """
-AI Analysis Pipeline
-Generates betting insights using OpenAI API
+AI Analyzer for NFL Games using OpenAI
 """
 
-import json
 import os
-from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List
 import openai
 
-# You'll set this as an environment variable
-# export OPENAI_API_KEY="your-key-here"
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
 class NFLAnalyzer:
-    """Generate AI betting insights for NFL games"""
+    """Generates betting analysis using OpenAI"""
     
-    def __init__(self, model="gpt-4o-mini"):  # Using mini for cost savings, can upgrade to gpt-4o
+    def __init__(self, model: str = "gpt-4o-mini"):
         self.model = model
+        
+        # Ensure API key is set
+        if not os.getenv('OPENAI_API_KEY'):
+            raise ValueError("OPENAI_API_KEY not found in environment")
+        
         self.system_prompt = """You are an expert NFL analyst focused on providing factual, data-driven betting insights. 
 
 Your analysis should be:
@@ -27,6 +25,13 @@ Your analysis should be:
 - Free from hype or guarantees
 - Honest about uncertainty
 - Focused on useful angles and context
+- Willing to recommend underdogs when they offer value
+
+IMPORTANT: Don't just pick favorites every time. Consider underdogs when:
+- Home team is underrated
+- Situational spots favor the dog
+- Line seems inflated
+- Public is heavily on favorite
 
 NEVER use words like: "lock", "guaranteed", "sure thing", "can't lose", "best bet ever"
 ALWAYS be measured: "lean", "favor", "suggest", "indicates", "trend shows"
@@ -86,8 +91,32 @@ Date: {game_data['game_time_display']}
 Venue: {game_data['venue']['name']} ({'Indoor' if game_data['venue']['indoor'] else 'Outdoor'})
 Location: {game_data['venue']['city']}, {game_data['venue']['state']}
 
-CURRENT BETTING LINES:
+HOME/AWAY SPLITS:
+{home['name']}: {home['home_record']} at home
+{away['name']}: {away['away_record']} on road
 """
+
+        # Add team leaders if available
+        if 'leaders' in home and home['leaders']:
+            prompt += f"""
+TEAM LEADERS:
+{home['name']}:"""
+            if 'passing' in home['leaders']:
+                prompt += f"\n  QB: {home['leaders']['passing']['player']} - {home['leaders']['passing']['stats']}"
+            if 'rushing' in home['leaders']:
+                prompt += f"\n  RB: {home['leaders']['rushing']['player']} - {home['leaders']['rushing']['stats']}"
+            if 'receiving' in home['leaders']:
+                prompt += f"\n  WR: {home['leaders']['receiving']['player']} - {home['leaders']['receiving']['stats']}"
+            
+            prompt += f"\n\n{away['name']}:"
+            if 'passing' in away['leaders']:
+                prompt += f"\n  QB: {away['leaders']['passing']['player']} - {away['leaders']['passing']['stats']}"
+            if 'rushing' in away['leaders']:
+                prompt += f"\n  RB: {away['leaders']['rushing']['player']} - {away['leaders']['rushing']['stats']}"
+            if 'receiving' in away['leaders']:
+                prompt += f"\n  WR: {away['leaders']['receiving']['player']} - {away['leaders']['receiving']['stats']}"
+        
+        prompt += "\n\nCURRENT BETTING LINES:\n"
         
         if odds:
             prompt += f"""Spread: {odds.get('spread_details', 'N/A')}
@@ -107,9 +136,16 @@ TOP_INSIGHT:
 SUMMARY:
 [2-3 paragraphs providing context on both teams, recent form, key matchup factors, and why this game matters]
 
+PREDICTED_LINE:
+[Your predicted spread in format "TEAM -X.X" or "TEAM +X.X", e.g., "Lions -9.5" or "Bears +7"]
+
+PREDICTED_TOTAL:
+[Your predicted total, e.g., "47.5"]
+
 AI_LEAN:
-[State your pick clearly using the predicted line, e.g. "Lions -9.5" or "Under 47.5" or "Bears +7"]
-[Brief statement like "Lean: [Team] [Spread/Total]" - be measured, never guarantee]
+[Your betting recommendation using your predicted line - MUST match PREDICTED_LINE format exactly]
+[Examples: "Eagles -6.5", "Bears +7", "Under 45.5"]
+[Be measured: Use words like "Lean" or "Favor" - never guarantee]
 
 ANGLES:
 [3-5 bullet points of interesting betting angles, trends, or situational spots. Include specific stats when possible]
@@ -124,12 +160,6 @@ Home Offense: [0-100 rating]
 Home Defense: [0-100 rating]
 Away Offense: [0-100 rating]
 Away Defense: [0-100 rating]
-
-PREDICTED_LINE:
-[Your predicted spread, e.g., "DET -9.5"]
-
-PREDICTED_TOTAL:
-[Your predicted total, e.g., "47.5"]
 
 INJURY_IMPACT:
 [Minor/Moderate/Significant and brief explanation]
@@ -172,162 +202,52 @@ CONFIDENCE:
             angles = [
                 line.strip('- ').strip() 
                 for line in sections['angles'].split('\n') 
-                if line.strip().startswith('-')
+                if line.strip() and line.strip().startswith('-')
             ]
         
-        # Extract team strengths
+        # Parse team strength ratings
         team_strength = {}
         if 'team_strength' in sections:
             for line in sections['team_strength'].split('\n'):
                 if ':' in line:
                     key, value = line.split(':', 1)
-                    team_strength[key.strip().lower().replace(' ', '_')] = value.strip()
+                    # Convert to snake_case
+                    key = key.strip().lower().replace(' ', '_')
+                    # Extract numeric value
+                    value = value.strip().split()[0]
+                    team_strength[key] = value
         
-        # Build final structure
-        analysis = {
-            'game_id': game_data['game_id'],
-            'analyzed_at': datetime.utcnow().isoformat(),
-            
-            # Core outputs
-            'top_insight': sections.get('top_insight', 'Analysis pending'),
-            'summary': sections.get('summary', ''),
-            'ai_lean': sections.get('ai_lean', 'No lean at this time'),
+        return {
+            'top_insight': sections.get('top_insight', 'Analysis unavailable'),
+            'summary': sections.get('summary', 'No summary available'),
+            'ai_lean': sections.get('ai_lean', 'No recommendation'),
             'angles': angles,
-            
-            # Predictions
             'predicted_line': sections.get('predicted_line', 'TBD'),
             'predicted_total': sections.get('predicted_total', 'TBD'),
-            
-            # Ratings
             'team_strength': team_strength,
             'injury_impact': sections.get('injury_impact', 'Unknown'),
-            'confidence_score': sections.get('confidence', 'Medium'),
-            
-            # Metadata
-            'model_used': self.model,
-            'game_data': {
-                'home_team': game_data['home_team']['name'],
-                'away_team': game_data['away_team']['name'],
-                'game_time': game_data['game_time_display']
-            }
+            'confidence_score': sections.get('confidence', 'Medium')
         }
-        
-        return analysis
     
     def _get_fallback_analysis(self, game_data: Dict) -> Dict:
-        """Return a safe fallback if AI fails"""
+        """Return a basic analysis if AI fails"""
+        
+        home = game_data['home_team']['name']
+        away = game_data['away_team']['name']
+        
         return {
-            'game_id': game_data['game_id'],
-            'analyzed_at': datetime.utcnow().isoformat(),
-            'top_insight': 'Analysis temporarily unavailable',
-            'summary': 'We are working on generating analysis for this matchup.',
-            'ai_lean': 'No analysis available',
-            'angles': [],
+            'top_insight': f"{away} @ {home} - Analysis temporarily unavailable",
+            'summary': f"Matchup between {away} and {home}. Full analysis coming soon.",
+            'ai_lean': 'No recommendation',
+            'angles': ['Analysis unavailable'],
             'predicted_line': 'TBD',
             'predicted_total': 'TBD',
-            'team_strength': {},
-            'injury_impact': 'Unknown',
-            'confidence_score': 'N/A',
-            'model_used': self.model,
-            'game_data': {
-                'home_team': game_data['home_team']['name'],
-                'away_team': game_data['away_team']['name'],
-                'game_time': game_data['game_time_display']
-            }
-        }
-
-def test_analyzer():
-    """Test the analyzer with extracted game data"""
-    
-    print("="*60)
-    print("AI ANALYZER TEST")
-    print("="*60)
-    
-    # Check for API key
-    if not os.getenv("OPENAI_API_KEY"):
-        print("\n⚠️  OPENAI_API_KEY not set!")
-        print("Set it with: export OPENAI_API_KEY='your-key-here'")
-        print("\nRunning with mock data instead...\n")
-        
-        # Load sample game data
-        with open('game_401671890.json', 'r') as f:
-            game_data = json.load(f)
-        
-        # Create mock analysis
-        mock_analysis = {
-            'game_id': game_data['game_id'],
-            'analyzed_at': datetime.utcnow().isoformat(),
-            'top_insight': 'The Lions are coming off a dominant performance and facing a Bears team that has struggled on the road.',
-            'summary': 'Detroit enters as heavy favorites after an impressive win streak. Chicago has lost 4 of their last 5 and struggles in divisional road games. The Lions offense has been explosive at home, averaging 31 PPG at Ford Field.',
-            'ai_lean': 'Lean: Lions -10.5',
-            'angles': [
-                'Detroit is 8-2 ATS at home this season',
-                'Bears are 1-5 ATS in divisional road games',
-                'Lions average 31 PPG at Ford Field',
-                'Chicago defense allows 27 PPG on the road'
-            ],
-            'predicted_line': 'DET -11',
-            'predicted_total': '49',
             'team_strength': {
-                'home_offense': '92',
-                'home_defense': '85',
-                'away_offense': '68',
-                'away_defense': '72'
+                'home_offense': '50',
+                'home_defense': '50',
+                'away_offense': '50',
+                'away_defense': '50'
             },
-            'injury_impact': 'Minor - No major injuries reported',
-            'confidence_score': 'High',
-            'model_used': 'mock',
-            'game_data': {
-                'home_team': game_data['home_team']['name'],
-                'away_team': game_data['away_team']['name'],
-                'game_time': game_data['game_time_display']
-            }
+            'injury_impact': 'Unknown',
+            'confidence_score': 'Low'
         }
-        
-        # Save it
-        filename = f"analysis_{game_data['game_id']}.json"
-        with open(filename, 'w') as f:
-            json.dump(mock_analysis, f, indent=2)
-        
-        print(f"✅ Created mock analysis: {filename}")
-        print("\nPreview:")
-        print(f"Top Insight: {mock_analysis['top_insight']}")
-        print(f"AI Lean: {mock_analysis['ai_lean']}")
-        print(f"Angles: {len(mock_analysis['angles'])} angles generated")
-        
-        return
-    
-    # Real API test
-    print("\n🤖 Testing with OpenAI API...\n")
-    
-    analyzer = NFLAnalyzer()
-    
-    # Load a game
-    with open('game_401671890.json', 'r') as f:
-        game_data = json.load(f)
-    
-    print(f"Analyzing: {game_data['away_team']['name']} @ {game_data['home_team']['name']}")
-    print("This will cost ~$0.10-0.20...\n")
-    
-    analysis = analyzer.analyze_game(game_data)
-    
-    # Save it
-    filename = f"analysis_{game_data['game_id']}.json"
-    with open(filename, 'w') as f:
-        json.dump(analysis, f, indent=2)
-    
-    print(f"\n✅ Analysis complete! Saved to {filename}\n")
-    
-    # Show preview
-    print("="*60)
-    print("PREVIEW")
-    print("="*60)
-    print(f"\nTop Insight:\n{analysis['top_insight']}")
-    print(f"\nAI Lean:\n{analysis['ai_lean']}")
-    print(f"\nAngles:")
-    for angle in analysis['angles']:
-        print(f"  • {angle}")
-    print(f"\nConfidence: {analysis['confidence_score']}")
-
-if __name__ == "__main__":
-    test_analyzer()
