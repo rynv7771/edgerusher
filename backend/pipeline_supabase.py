@@ -105,7 +105,7 @@ class NFLDataPipeline:
             }
             
             # Upsert (insert or update if exists)
-            self.supabase.table('games_raw').upsert(game_record).execute()
+            self.supabase.table('games_raw').upsert(game_record, on_conflict='game_id').execute()
             print(f"  ✅ Saved raw game data")
             
             # 2. Save AI analysis
@@ -124,7 +124,7 @@ class NFLDataPipeline:
             }
             
             # Upsert AI analysis
-            self.supabase.table('ai_outputs').upsert(ai_record).execute()
+            self.supabase.table('ai_outputs').upsert(ai_record, on_conflict='game_id').execute()
             print(f"  ✅ Saved AI analysis")
             
             self.stats['games_saved'] += 1
