@@ -12,7 +12,7 @@ import requests
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
-# Load environment variables
+# Load environment variables (works locally, GitHub Actions passes them directly)
 load_dotenv()
 
 # Import our modules
@@ -29,19 +29,24 @@ class NFLDataPipeline:
         self.season_year = season_year
         self.use_mock_data = use_mock_data
         
-        # Set up Supabase with SERVICE ROLE KEY (bypasses RLS)
-        supabase_url = os.getenv('NEXT_PUBLIC_SUPABASE_URL')
-        supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        # Set up Supabase - check multiple env var names
+        supabase_url = os.getenv('NEXT_PUBLIC_SUPABASE_URL') or os.getenv('SUPABASE_URL')
+        supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('NEXT_PUBLIC_SUPABASE_ANON_KEY')
         
         if not supabase_url or not supabase_key:
-            raise ValueError("Missing Supabase credentials in .env")
+            raise ValueError(f"Missing Supabase credentials. URL: {bool(supabase_url)}, Key: {bool(supabase_key)}")
+        
+        print(f"✓ Supabase URL: {supabase_url}")
+        print(f"✓ Supabase Key: {'*' * 20}...{supabase_key[-4:]}")
         
         self.supabase: Client = create_client(supabase_url, supabase_key)
         
         # Set up AI analyzer
         openai_key = os.getenv('OPENAI_API_KEY')
         if not openai_key:
-            raise ValueError("Missing OPENAI_API_KEY in .env")
+            raise ValueError("Missing OPENAI_API_KEY")
+        
+        print(f"✓ OpenAI Key: {'*' * 20}...{openai_key[-4:]}")
         
         os.environ['OPENAI_API_KEY'] = openai_key
         self.analyzer = NFLAnalyzer()
