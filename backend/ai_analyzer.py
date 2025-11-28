@@ -13,51 +13,39 @@ class NFLAnalyzer:
     def __init__(self, model: str = "gpt-4o-mini"):
         self.model = model
         
-        # Ensure API key is set
         if not os.getenv('OPENAI_API_KEY'):
             raise ValueError("OPENAI_API_KEY not found in environment")
         
-        self.system_prompt = """You are an expert NFL betting analyst who understands point spread betting.
+        self.system_prompt = """You are an expert NFL betting analyst specializing in point spread analysis.
 
-CRITICAL CONCEPTS - SPREAD BETTING EDUCATION:
+KEY CONCEPTS:
 
-1. THE SPREAD IS NOT ABOUT WHO WINS THE GAME
-   - A favorite at -7 must win by 8+ points for the bet to WIN
-   - An underdog at +7 can LOSE by up to 6 points and the bet still WINS
-   - Example: Eagles -7 vs Bears +7
-     * If Eagles win 24-20 (4 point margin), Bears +7 bettors WIN
-     * Eagles must win 28-20 (8+ points) for Eagles -7 bettors to WIN
+UNDERSTANDING THE SPREAD:
+- The spread represents the expected margin of victory
+- "Patriots -9" means Patriots must win by 10+ points for that bet to win
+- "Giants +9" means Giants can lose by 8 or less (or win outright) for that bet to win
+- Your job: Determine if the favorite will exceed the spread or fall short of it
 
-2. HOME FIELD ADVANTAGE
-   - Typical NFL home field advantage is 2-3 points
-   - Indoor vs outdoor, weather, crowd noise all factor in
+REFRAME EVERY GAME:
+Instead of "Who will win?", ask:
+- "Will the favorite win by MORE than the spread?" = Bet the favorite
+- "Will the margin be LESS than the spread?" = Bet the underdog
 
-3. FAVORITES VS UNDERDOGS
-   - NFL favorites cover the spread only ~49% of the time
-   - Underdogs of 7+ points cover ~52% of the time historically
-   - Public heavily bets favorites, creating value on underdogs
-   - You should be picking underdogs in 40-50% of games if you're calibrated
+EXAMPLE:
+Eagles -7 vs Bears +7
+- Don't ask: "Will Eagles win?" (probably yes)
+- Ask: "Will Eagles win by 8+ points?" (much less certain)
+- If you think Eagles win 24-20 (4 pts), the answer is NO → Bet Bears +7
 
-4. LINE VALUE
-   - If you think Eagles should be -4, but line is -7, there's VALUE on Bears +7
-   - If you think a game totals 44 points, but line is 48, there's VALUE on Under
-   - The question isn't "who's better?" but "who's undervalued by the line?"
+CALIBRATION:
+- In a typical week, underdogs cover 40-50% of spreads
+- If you're picking favorites in 90%+ of games, you're miscalibrated
+- Look for spots where the favorite wins but doesn't cover
 
-Your analysis should be:
-- Data-driven and factual
-- Focused on finding value, not just picking better teams
-- Honest about uncertainty
-- Willing to back underdogs when warranted
-
-NEVER use: "lock", "guaranteed", "sure thing", "can't lose"
-ALWAYS be measured: "lean", "favor", "value", "suggests"
-"""
+Be measured, factual, and focus on margin of victory relative to the line."""
 
     def analyze_game(self, game_data: Dict) -> Dict:
-        """
-        Generate complete analysis for a single game
-        Returns all AI outputs in structured format
-        """
+        """Generate complete analysis for a single game"""
         
         prompt = self._build_analysis_prompt(game_data)
         
@@ -73,8 +61,6 @@ ALWAYS be measured: "lean", "favor", "value", "suggests"
             )
             
             analysis_text = response.choices[0].message.content
-            
-            # Parse the structured response
             analysis = self._parse_analysis(analysis_text, game_data)
             
             return analysis
@@ -90,23 +76,28 @@ ALWAYS be measured: "lean", "favor", "value", "suggests"
         away = game_data['away_team']
         odds = game_data.get('odds', {})
         
-        prompt = f"""Analyze this NFL Week {game_data['week']} matchup and find the betting value.
+        # Determine who's favored and by how much
+        spread_info = ""
+        if odds and odds.get('spread_details'):
+            spread = odds.get('spread_details')
+            spread_info = f"\nCURRENT SPREAD: {spread}"
+        
+        prompt = f"""NFL BETTING ANALYSIS - Week {game_data['week']}
 
 MATCHUP:
 {away['name']} ({away['record']}) @ {home['name']} ({home['record']})
-Date: {game_data['game_time_display']}
 Venue: {game_data['venue']['name']} ({'Indoor' if game_data['venue']['indoor'] else 'Outdoor'})
-Location: {game_data['venue']['city']}, {game_data['venue']['state']}
+{game_data['venue']['city']}, {game_data['venue']['state']}
 
-HOME/AWAY SPLITS:
+RECORDS:
 {home['name']}: {home['home_record']} at home
 {away['name']}: {away['away_record']} on road
 """
 
-        # Add team leaders if available
+        # Add team leaders
         if 'leaders' in home and home['leaders']:
             prompt += f"""
-TEAM LEADERS:
+KEY PLAYERS:
 {home['name']}:"""
             if 'passing' in home['leaders']:
                 prompt += f"\n  QB: {home['leaders']['passing']['player']} - {home['leaders']['passing']['stats']}"
@@ -123,61 +114,78 @@ TEAM LEADERS:
             if 'receiving' in away['leaders']:
                 prompt += f"\n  WR: {away['leaders']['receiving']['player']} - {away['leaders']['receiving']['stats']}"
         
-        prompt += "\n\nYOUR TASK:\n"
-        prompt += "1. First, predict what YOU think the spread should be based on the matchup\n"
-        prompt += "2. Then compare your prediction to the current Vegas line (shown below)\n"
-        prompt += "3. Identify where the betting value exists\n"
+        prompt += spread_info
         
-        if odds and odds.get('spread'):
-            prompt += f"\nCURRENT VEGAS LINE: {odds.get('spread_details', 'N/A')}\n"
-            prompt += f"Over/Under: {odds.get('over_under', 'N/A')}\n"
+        if odds and odds.get('over_under'):
+            prompt += f"\nTotal: {odds.get('over_under')}"
+        
+        # THE KEY QUESTION
+        if odds and odds.get('spread_details'):
+            spread = odds.get('spread_details')
+            prompt += f"""
+
+THE CRITICAL QUESTION:
+Given the spread of {spread}, answer this:
+
+Will the favorite cover this spread (win by more than the number), 
+OR will the underdog cover (lose by less than the number or win outright)?
+
+Think about:
+1. What's the most likely score/margin?
+2. Is that margin bigger or smaller than the spread?
+3. What factors could keep the game closer than expected?
+4. What factors could lead to a blowout?
+
+Don't just pick who wins - pick who covers the SPREAD.
+"""
         else:
-            prompt += "\nVegas lines not yet available - make your own prediction\n"
+            prompt += """
+
+Since no spread is posted yet, predict what the spread should be and explain your reasoning.
+"""
         
         prompt += """
 
-RESPOND IN THIS EXACT FORMAT:
+RESPOND IN THIS FORMAT:
 
 TOP_INSIGHT:
-[One compelling sentence about the key betting angle in this game]
+[One sentence - the key factor in this game]
 
 SUMMARY:
-[2-3 paragraphs analyzing both teams, recent form, key matchups, and situational factors]
+[2-3 paragraphs on both teams, form, matchup factors]
 
-YOUR_PREDICTED_SPREAD:
-[What you think the spread should be, format: "TEAM -X.X" or "TEAM +X.X"]
-[Explanation: Why this number? What factors led you here?]
+SPREAD_ANALYSIS:
+[Answer the critical question: Will the favorite cover or will the underdog cover?]
+[Explain your expected margin of victory and how it compares to the spread]
+
+PREDICTED_LINE:
+[Format: "TEAM +/-X.X" - Your prediction of what the spread should be]
 
 PREDICTED_TOTAL:
-[Your predicted total points, e.g., "47.5"]
-
-VALUE_ANALYSIS:
-[Compare your prediction to Vegas line if available. Where's the value?]
-[If your line differs from Vegas by 2+ points, that's significant value]
+[Just the number, e.g., "45.5"]
 
 AI_LEAN:
-[Your betting recommendation in format "TEAM +/-X.X" or "Over/Under X.X"]
-[This should be whichever side offers VALUE based on your analysis]
-[Remember: Underdogs can LOSE the game and still cover. Don't just pick who you think wins.]
+[Your pick: Either the favorite with the spread, or the underdog with the spread]
+[Format: "Patriots -9" or "Giants +9" or "Under 45.5"]
 
 ANGLES:
-[3-5 bullet points of specific betting angles, trends, or factors]
-- [Include specific stats, situational spots, trends]
-- [Look for underdog value if line seems inflated]
-- [Consider home/away trends, divisional factors]
-- [Note any pace of play or defensive factors for total]
+- [Specific betting angle 1]
+- [Specific betting angle 2]
+- [Specific betting angle 3]
+- [Specific betting angle 4]
+- [Specific betting angle 5]
 
 TEAM_STRENGTH:
-Home Offense: [0-100 rating]
-Home Defense: [0-100 rating]
-Away Offense: [0-100 rating]  
-Away Defense: [0-100 rating]
+Home Offense: [0-100]
+Home Defense: [0-100]
+Away Offense: [0-100]
+Away Defense: [0-100]
 
 INJURY_IMPACT:
-[Minor/Moderate/Significant and brief explanation]
+[Minor/Moderate/Significant and why]
 
 CONFIDENCE:
-[Low/Medium/High - be honest about uncertainty]
+[Low/Medium/High]
 """
         
         return prompt
@@ -192,23 +200,19 @@ CONFIDENCE:
         for line in text.split('\n'):
             line = line.strip()
             
-            # Check if this is a section header
             if line.endswith(':') and line.replace('_', ' ').replace(':', '').isupper():
-                # Save previous section
                 if current_section:
                     sections[current_section] = '\n'.join(current_content).strip()
                 
-                # Start new section
                 current_section = line[:-1].lower()
                 current_content = []
             elif line:
                 current_content.append(line)
         
-        # Save last section
         if current_section:
             sections[current_section] = '\n'.join(current_content).strip()
         
-        # Extract angles as array
+        # Extract angles
         angles = []
         if 'angles' in sections:
             angles = [
@@ -217,21 +221,17 @@ CONFIDENCE:
                 if line.strip() and line.strip().startswith('-')
             ]
         
-        # Parse team strength ratings
+        # Parse team strength
         team_strength = {}
         if 'team_strength' in sections:
             for line in sections['team_strength'].split('\n'):
                 if ':' in line:
                     key, value = line.split(':', 1)
-                    # Convert to snake_case
                     key = key.strip().lower().replace(' ', '_')
-                    # Extract numeric value
                     value = value.strip().split()[0]
                     team_strength[key] = value
         
-        # Use YOUR_PREDICTED_SPREAD or fall back to PREDICTED_LINE
-        predicted_line = sections.get('your_predicted_spread') or sections.get('predicted_line', 'TBD')
-        # Clean up - take just the first line if there's an explanation
+        predicted_line = sections.get('predicted_line', 'TBD')
         if '\n' in predicted_line:
             predicted_line = predicted_line.split('\n')[0].strip()
         
@@ -248,14 +248,14 @@ CONFIDENCE:
         }
     
     def _get_fallback_analysis(self, game_data: Dict) -> Dict:
-        """Return a basic analysis if AI fails"""
+        """Return basic analysis if AI fails"""
         
         home = game_data['home_team']['name']
         away = game_data['away_team']['name']
         
         return {
-            'top_insight': f"{away} @ {home} - Analysis temporarily unavailable",
-            'summary': f"Matchup between {away} and {home}. Full analysis coming soon.",
+            'top_insight': f"{away} @ {home} - Analysis unavailable",
+            'summary': f"Matchup between {away} and {home}.",
             'ai_lean': 'No recommendation',
             'angles': ['Analysis unavailable'],
             'predicted_line': 'TBD',
