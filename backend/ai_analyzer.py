@@ -108,6 +108,7 @@ SUMMARY:
 [2-3 paragraphs providing context on both teams, recent form, key matchup factors, and why this game matters]
 
 AI_LEAN:
+[State your pick clearly using the predicted line, e.g. "Lions -9.5" or "Under 47.5" or "Bears +7"]
 [Brief statement like "Lean: [Team] [Spread/Total]" - be measured, never guarantee]
 
 ANGLES:
