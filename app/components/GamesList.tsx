@@ -50,16 +50,13 @@ export default function GamesList() {
   return (
     <div className="grid gap-6">
       {games.map(game => {
-        // ESPN gives UTC times
         const gameTime = new Date(game.games_raw.game_time + 'Z')
-        
-        // Get user's timezone abbreviation
         const timezoneName = gameTime.toLocaleTimeString('en-US', { 
           timeZoneName: 'short' 
         }).split(' ').pop()
         
         return (
-          <div key={game.id} className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 hover:border-blue-500 transition cursor-pointer">
+          <div key={game.id} className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 hover:border-blue-500 transition">
             <div className="flex justify-between items-start mb-4">
               <div className="flex-1">
                 <h3 className="text-xl font-bold mb-2">
@@ -83,7 +80,7 @@ export default function GamesList() {
               </p>
             </div>
 
-            <div className="flex gap-4 text-sm flex-wrap">
+            <div className="flex gap-4 text-sm flex-wrap mb-4">
               <div>
                 <span className="text-gray-400">AI Pick:</span>
                 <span className="ml-2 font-medium">{game.predicted_line}</span>
@@ -94,13 +91,21 @@ export default function GamesList() {
               </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-700">
+            <div className="pt-4 border-t border-gray-700 flex gap-3">
               <Link
                 href={`/game/${game.game_id}`}
-                className="text-blue-400 hover:text-blue-300 font-medium inline-block"
+                className="flex-1 text-center py-2 text-blue-400 hover:text-blue-300 font-medium transition"
               >
                 View Full Analysis →
               </Link>
+              <a 
+                href="https://sportsbook.draftkings.com/" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition whitespace-nowrap"
+              >
+                Place Bet
+              </a>
             </div>
           </div>
         )

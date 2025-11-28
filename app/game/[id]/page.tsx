@@ -77,17 +77,13 @@ export default function GameDetailPage() {
     )
   }
 
-  // ESPN gives UTC times
   const gameTime = new Date(game.games_raw.game_time + 'Z')
-  
-  // Get user's timezone abbreviation
   const timezoneName = gameTime.toLocaleTimeString('en-US', { 
     timeZoneName: 'short' 
   }).split(' ').pop()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white">
-      {/* Header */}
       <header className="border-b border-gray-800">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
@@ -124,9 +120,20 @@ export default function GameDetailPage() {
                 })} {timezoneName}
               </p>
             </div>
-            <span className="px-4 py-2 bg-blue-600/20 text-blue-400 rounded-full font-medium">
-              {game.confidence_score} Confidence
-            </span>
+          </div>
+
+          <div className="mt-6 p-4 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/50 rounded-lg flex items-center justify-between">
+            <div>
+              <div className="font-bold text-lg">Ready to place your bet?</div>
+            </div>
+            <a 
+              href="https://sportsbook.draftkings.com/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition whitespace-nowrap"
+            >
+              Place Bet →
+            </a>
           </div>
         </div>
 
@@ -136,8 +143,8 @@ export default function GameDetailPage() {
         </div>
 
         <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 mb-6">
-          <div className="text-sm text-gray-400 font-medium mb-2">AI LEAN</div>
-          <p className="text-2xl font-bold text-blue-400">{game.ai_lean}</p>
+          <div className="text-sm text-gray-400 font-medium mb-2">AI PICK</div>
+          <p className="text-2xl font-bold text-blue-400">{game.predicted_line}</p>
         </div>
 
         <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 mb-6">
@@ -236,12 +243,17 @@ export default function GameDetailPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-8 text-center">
-          <h3 className="text-2xl font-bold mb-2">Want More Insights?</h3>
-          <p className="mb-6 opacity-90">Subscribe to unlock all games and advanced analytics</p>
-          <button className="px-8 py-3 bg-white text-blue-600 hover:bg-gray-100 rounded-lg font-bold transition">
-            Subscribe Now - $10/month
-          </button>
+        <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg p-8 text-center">
+          <h3 className="text-2xl font-bold mb-2">Ready to Place Your Bet?</h3>
+          <p className="mb-6 opacity-90">Use our analysis to make informed betting decisions</p>
+          <a 
+            href="https://sportsbook.draftkings.com/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-8 py-3 bg-white text-green-600 hover:bg-gray-100 rounded-lg font-bold transition"
+          >
+            Place Bet →
+          </a>
         </div>
       </div>
     </div>
