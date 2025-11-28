@@ -55,6 +55,9 @@ export default function GamesList() {
           timeZoneName: 'short' 
         }).split(' ').pop()
         
+        // Clean up ai_lean - remove "Lean: " prefix if present
+        const cleanPick = game.ai_lean.replace(/^Lean:\s*/i, '').trim()
+        
         return (
           <div key={game.id} className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 hover:border-blue-500 transition">
             <div className="flex justify-between items-start mb-4">
@@ -83,7 +86,7 @@ export default function GamesList() {
             <div className="flex gap-4 text-sm flex-wrap mb-4">
               <div>
                 <span className="text-gray-400">AI Pick:</span>
-                <span className="ml-2 font-medium">{game.predicted_line}</span>
+                <span className="ml-2 font-medium">{cleanPick}</span>
               </div>
               <div>
                 <span className="text-gray-400">Predicted Total:</span>
