@@ -9,9 +9,9 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
             <img
-              src="/logo.png"
+              src="/boot-icon.png"
               alt="Betting Boots"
-              className="h-16 w-auto"
+              className="h-12 w-auto"
             />
           </Link>
           <button className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20">
