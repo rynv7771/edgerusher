@@ -17,23 +17,26 @@ export async function GET() {
 
     if (error) throw error
 
-    // Transform nested data to flat structure
-    const games = (data || []).map((item: any) => ({
-      game_id: item.game_id,
-      away_team: item.games_raw.away_team,
-      home_team: item.games_raw.home_team,
-      game_time: item.games_raw.game_time,
-      venue: item.games_raw.venue,
-      ai_lean: item.ai_lean,
-      top_insight: item.top_insight,
-      predicted_total: item.predicted_total,
-      summary: item.summary,
-      angles: item.angles,
-      predicted_line: item.predicted_line,
-      team_strength: item.team_strength,
-      injury_impact: item.injury_impact,
-      confidence_score: item.confidence_score
-    }))
+    const games = (data || []).map((item: any) => {
+      const rawGame = item.games_raw.raw_json || {}
+      
+      return {
+        game_id: item.game_id,
+        away_team: rawGame.away_team || { name: 'Away Team', abbreviation: 'AWAY' },
+        home_team: rawGame.home_team || { name: 'Home Team', abbreviation: 'HOME' },
+        game_time: item.games_raw.game_time,
+        venue: rawGame.venue || 'TBD',
+        ai_lean: item.ai_lean,
+        top_insight: item.top_insight,
+        predicted_total: item.predicted_total,
+        summary: item.summary,
+        angles: item.angles,
+        predicted_line: item.predicted_line,
+        team_strength: item.team_strength,
+        injury_impact: item.injury_impact,
+        confidence_score: item.confidence_score
+      }
+    })
 
     return NextResponse.json(games)
   } catch (error) {
