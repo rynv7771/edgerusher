@@ -22,7 +22,13 @@ export default function Home() {
 
       {/* Hero */}
       <section className="py-24 text-center">
-        <div className="container mx-auto px-4">
+          <div className="flex justify-center mb-8">
+            <img 
+              src="/logo-horizontal.png" 
+              alt="Betting Boots" 
+              className="h-32 md:h-40 w-auto"
+            />
+          </div>        <div className="container mx-auto px-4">
           <div className="inline-block mb-6 px-6 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full">
             <span className="text-orange-400 font-semibold">⚡ AI-Powered Analysis</span>
           </div>
