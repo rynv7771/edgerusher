@@ -21,7 +21,7 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="py-24 text-center">
+      <section className="py-12 text-center">
           <div className="flex justify-center mb-8">
             <img 
               src="/logo-horizontal.png" 
