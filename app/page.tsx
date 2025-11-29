@@ -1,24 +1,10 @@
 import GamesList from './components/GamesList'
-import Link from 'next/link'
+import Header from './components/Header'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
-      {/* Header */}
-      <header className="border-b border-orange-900/20 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
-            <img
-              src="/boot-icon.png"
-              alt="Betting Boots"
-              className="h-12 w-auto"
-            />
-          </Link>
-          <Link href="/auth/signin" className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20">
-            Sign In
-          </Link>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="py-12 text-center">
