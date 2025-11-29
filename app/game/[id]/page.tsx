@@ -56,9 +56,9 @@ export default function GameDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white">
+      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
         <div className="container mx-auto px-4 py-20 text-center">
-          <div className="text-xl">Loading game analysis...</div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500 mx-auto"></div>
         </div>
       </div>
     )
@@ -66,10 +66,10 @@ export default function GameDetailPage() {
 
   if (!game) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white">
+      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
         <div className="container mx-auto px-4 py-20 text-center">
           <div className="text-xl mb-4">Game not found</div>
-          <Link href="/" className="text-blue-400 hover:text-blue-300">
+          <Link href="/" className="text-orange-400 hover:text-orange-300">
             ← Back to home
           </Link>
         </div>
@@ -78,133 +78,149 @@ export default function GameDetailPage() {
   }
 
   const gameTime = new Date(game.games_raw.game_time + 'Z')
-  const timezoneName = gameTime.toLocaleTimeString('en-US', { 
-    timeZoneName: 'short' 
+  const timezoneName = gameTime.toLocaleTimeString('en-US', {
+    timeZoneName: 'short'
   }).split(' ').pop()
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white">
-      <header className="border-b border-gray-800">
-        <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-3xl">🥾</span>
-            <span className="text-2xl font-bold">Betting Boots</span>
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+      {/* Header */}
+      <header className="border-b border-orange-900/20 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
+            <img
+              src="/logo.png"
+              alt="Betting Boots"
+              className="h-16 w-auto"
+            />
           </Link>
-          <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition">
+          <button className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20">
             Sign In
           </button>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <Link href="/" className="text-blue-400 hover:text-blue-300 mb-6 inline-block">
+        <Link href="/" className="text-orange-400 hover:text-orange-300 mb-8 inline-flex items-center gap-2 font-semibold">
           ← Back to all games
         </Link>
 
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-8 mb-6">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <div className="text-sm text-gray-400 mb-2">Week {game.games_raw.week}</div>
-              <h1 className="text-4xl font-bold mb-2">
-                {game.games_raw.raw_json.away_team.name}
-                <span className="text-gray-500 mx-3">@</span>
-                {game.games_raw.raw_json.home_team.name}
-              </h1>
-              <p className="text-gray-400">
-                {gameTime.toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: 'numeric',
-                  minute: '2-digit'
-                })} {timezoneName}
-              </p>
-            </div>
-          </div>
+        {/* Game Header */}
+        <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700/50 p-8 mb-6">
+          <div className="text-sm text-slate-500 mb-2">Week {game.games_raw.week}</div>
+          <h1 className="text-4xl md:text-5xl font-black mb-4">
+            {game.games_raw.raw_json.away_team.name}
+            <span className="text-slate-600 mx-3">@</span>
+            {game.games_raw.raw_json.home_team.name}
+          </h1>
+          <p className="text-slate-400 text-lg mb-6">
+            📅 {gameTime.toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'long',
+              day: 'numeric'
+            })} at {gameTime.toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit'
+            })} {timezoneName}
+          </p>
 
-          <div className="mt-6 p-4 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/50 rounded-lg flex items-center justify-between">
+          {/* CTA Box */}
+          <div className="p-6 bg-gradient-to-r from-orange-600/20 to-orange-500/20 border border-orange-500/50 rounded-xl flex items-center justify-between">
             <div>
-              <div className="font-bold text-lg">Ready to place your bet?</div>
+              <div className="font-bold text-xl text-white">Ready to place your bet?</div>
+              <div className="text-orange-300 text-sm">Use our AI analysis to bet smarter</div>
             </div>
-            <a 
-              href="https://sportsbook.draftkings.com/" 
+            <a
+              href="https://sportsbook.draftkings.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition whitespace-nowrap"
+              className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 whitespace-nowrap"
             >
               Place Bet →
             </a>
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/50 rounded-lg p-6 mb-6">
-          <div className="text-sm text-blue-400 font-medium mb-2">💡 TOP INSIGHT</div>
-          <p className="text-xl font-medium">{game.top_insight}</p>
+        {/* Top Insight */}
+        <div className="bg-slate-950/50 rounded-xl border border-orange-900/20 p-6 mb-6">
+          <div className="flex items-start gap-3 mb-3">
+            <span className="text-3xl">💡</span>
+            <div className="text-sm text-orange-400 font-semibold uppercase tracking-wide">Top Insight</div>
+          </div>
+          <p className="text-xl text-slate-200 leading-relaxed">{game.top_insight}</p>
         </div>
 
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 mb-6">
-          <div className="text-sm text-gray-400 font-medium mb-2">AI PICK</div>
-          <p className="text-2xl font-bold text-blue-400">{game.predicted_line}</p>
+        {/* AI Pick & Stats */}
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-slate-950/50 rounded-xl border border-slate-700/50 p-6">
+            <div className="text-xs text-slate-500 uppercase font-semibold mb-2">AI Pick</div>
+            <div className="text-2xl font-bold text-orange-400">{game.ai_lean}</div>
+          </div>
+          <div className="bg-slate-950/50 rounded-xl border border-slate-700/50 p-6">
+            <div className="text-xs text-slate-500 uppercase font-semibold mb-2">Predicted Total</div>
+            <div className="text-2xl font-bold text-yellow-400">{game.predicted_total}</div>
+          </div>
+          <div className="bg-slate-950/50 rounded-xl border border-slate-700/50 p-6">
+            <div className="text-xs text-slate-500 uppercase font-semibold mb-2">Confidence</div>
+            <div className="text-xl font-bold text-slate-200">{game.confidence_score}</div>
+          </div>
         </div>
 
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 mb-6">
-          <h2 className="text-xl font-bold mb-4">Game Summary</h2>
-          <p className="text-gray-300 leading-relaxed">{game.summary}</p>
+        {/* Summary */}
+        <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700/50 p-8 mb-6">
+          <h2 className="text-2xl font-black mb-4 flex items-center gap-3">
+            <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-yellow-500"></div>
+            Game Summary
+          </h2>
+          <p className="text-slate-300 leading-relaxed text-lg">{game.summary}</p>
         </div>
 
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 mb-6">
-          <h2 className="text-xl font-bold mb-4">Betting Angles</h2>
-          <div className="space-y-3">
+        {/* Betting Angles */}
+        <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700/50 p-8 mb-6">
+          <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
+            <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-yellow-500"></div>
+            Betting Angles
+          </h2>
+          <div className="space-y-4">
             {game.angles.map((angle, index) => (
-              <div key={index} className="flex gap-3">
-                <span className="text-blue-400 font-bold">{index + 1}.</span>
-                <p className="text-gray-300">{angle}</p>
+              <div key={index} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg border border-slate-700/30">
+                <span className="text-orange-400 font-bold text-lg flex-shrink-0">{index + 1}.</span>
+                <p className="text-slate-300 leading-relaxed">{angle}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 text-center">
-            <div className="text-sm text-gray-400 mb-2">Predicted Line</div>
-            <div className="text-2xl font-bold">{game.predicted_line}</div>
-          </div>
-          <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 text-center">
-            <div className="text-sm text-gray-400 mb-2">Predicted Total</div>
-            <div className="text-2xl font-bold">{game.predicted_total}</div>
-          </div>
-          <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 text-center">
-            <div className="text-sm text-gray-400 mb-2">Injury Impact</div>
-            <div className="text-xl font-medium">{game.injury_impact}</div>
-          </div>
-        </div>
+        {/* Team Strength */}
+        <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700/50 p-8 mb-6">
+          <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
+            <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-yellow-500"></div>
+            Team Strength Comparison
+          </h2>
 
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 mb-6">
-          <h2 className="text-xl font-bold mb-6">Team Strength Comparison</h2>
-
-          <div className="mb-6">
-            <div className="text-sm text-gray-400 mb-3">{game.games_raw.raw_json.home_team.name}</div>
-            <div className="space-y-3">
+          <div className="mb-8">
+            <div className="text-lg font-bold mb-4 text-orange-400">{game.games_raw.raw_json.home_team.name}</div>
+            <div className="space-y-4">
               <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Offense</span>
-                  <span className="font-medium">{game.team_strength.home_offense}/100</span>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-slate-400">Offense</span>
+                  <span className="font-bold text-slate-200">{game.team_strength.home_offense}/100</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-slate-800 rounded-full h-3">
                   <div
-                    className="bg-blue-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-orange-500 to-yellow-500 h-3 rounded-full transition-all"
                     style={{ width: `${game.team_strength.home_offense}%` }}
                   />
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Defense</span>
-                  <span className="font-medium">{game.team_strength.home_defense}/100</span>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-slate-400">Defense</span>
+                  <span className="font-bold text-slate-200">{game.team_strength.home_defense}/100</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-slate-800 rounded-full h-3">
                   <div
-                    className="bg-green-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full transition-all"
                     style={{ width: `${game.team_strength.home_defense}%` }}
                   />
                 </div>
@@ -213,28 +229,28 @@ export default function GameDetailPage() {
           </div>
 
           <div>
-            <div className="text-sm text-gray-400 mb-3">{game.games_raw.raw_json.away_team.name}</div>
-            <div className="space-y-3">
+            <div className="text-lg font-bold mb-4 text-orange-400">{game.games_raw.raw_json.away_team.name}</div>
+            <div className="space-y-4">
               <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Offense</span>
-                  <span className="font-medium">{game.team_strength.away_offense}/100</span>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-slate-400">Offense</span>
+                  <span className="font-bold text-slate-200">{game.team_strength.away_offense}/100</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-slate-800 rounded-full h-3">
                   <div
-                    className="bg-blue-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-orange-500 to-yellow-500 h-3 rounded-full transition-all"
                     style={{ width: `${game.team_strength.away_offense}%` }}
                   />
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Defense</span>
-                  <span className="font-medium">{game.team_strength.away_defense}/100</span>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-slate-400">Defense</span>
+                  <span className="font-bold text-slate-200">{game.team_strength.away_defense}/100</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-slate-800 rounded-full h-3">
                   <div
-                    className="bg-green-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full transition-all"
                     style={{ width: `${game.team_strength.away_defense}%` }}
                   />
                 </div>
@@ -243,16 +259,17 @@ export default function GameDetailPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg p-8 text-center">
-          <h3 className="text-2xl font-bold mb-2">Ready to Place Your Bet?</h3>
-          <p className="mb-6 opacity-90">Use our analysis to make informed betting decisions</p>
-          <a 
-            href="https://sportsbook.draftkings.com/" 
+        {/* Final CTA */}
+        <div className="bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl p-8 text-center shadow-xl shadow-orange-500/20">
+          <h3 className="text-3xl font-black mb-3">Ready to Place Your Bet?</h3>
+          <p className="mb-6 text-orange-100 text-lg">Use our AI analysis to make smarter betting decisions</p>
+          <a
+            href="https://sportsbook.draftkings.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-8 py-3 bg-white text-green-600 hover:bg-gray-100 rounded-lg font-bold transition"
+            className="inline-block px-10 py-4 bg-white text-orange-600 hover:bg-slate-100 rounded-lg font-bold transition text-lg shadow-lg"
           >
-            Place Bet →
+            Place Bet on DraftKings →
           </a>
         </div>
       </div>
