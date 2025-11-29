@@ -14,9 +14,9 @@ export default function Home() {
               className="h-12 w-auto"
             />
           </Link>
-          <button className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20">
+          <Link href="/auth/signin" className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20">
             Sign In
-          </button>
+          </Link>
         </div>
       </header>
 
