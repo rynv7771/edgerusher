@@ -4,26 +4,14 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 interface Game {
-  id: number
   game_id: string
-  top_insight: string
-  summary: string
+  away_team: { name: string; abbreviation: string }
+  home_team: { name: string; abbreviation: string }
+  game_time: string
+  venue: string
   ai_lean: string
-  angles: string[]
-  predicted_line: string
+  top_insight: string
   predicted_total: string
-  confidence_score: string
-  games_raw: {
-    raw_json: {
-      away_team: {
-        name: string
-      }
-      home_team: {
-        name: string
-      }
-    }
-    game_time: string
-  }
 }
 
 export default function GamesList() {
@@ -34,81 +22,100 @@ export default function GamesList() {
     fetch('/api/games')
       .then(res => res.json())
       .then(data => {
-        setGames(data.games)
+        setGames(data)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to fetch games:', err)
         setLoading(false)
       })
   }, [])
 
   if (loading) {
-    return <div className="text-center py-12">Loading games...</div>
+    return (
+      <div className="flex justify-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      </div>
+    )
   }
 
   if (games.length === 0) {
-    return <div className="text-center py-12 text-gray-400">No upcoming games available.</div>
+    return (
+      <div className="text-center py-20">
+        <div className="text-6xl mb-4">🏈</div>
+        <p className="text-xl text-slate-400">No games available yet. Check back soon!</p>
+      </div>
+    )
   }
 
   return (
     <div className="grid gap-6">
-      {games.map(game => {
-        const gameTime = new Date(game.games_raw.game_time + 'Z')
-        const timezoneName = gameTime.toLocaleTimeString('en-US', { 
-          timeZoneName: 'short' 
-        }).split(' ').pop()
-        
-        // Clean up ai_lean - remove "Lean: " prefix if present
-        const cleanPick = game.ai_lean.replace(/^Lean:\s*/i, '').trim()
-        
+      {games.map((game) => {
+        const gameTime = new Date(game.game_time + 'Z')
+        const formattedTime = gameTime.toLocaleString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          timeZoneName: 'short'
+        })
+
+        const aiLean = game.ai_lean?.replace(/^Lean:\s*/i, '') || 'Analysis pending'
+
         return (
-          <div key={game.id} className="bg-gray-800/50 rounded-lg border border-gray-700 p-6 hover:border-blue-500 transition">
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex-1">
-                <h3 className="text-xl font-bold mb-2">
-                  {game.games_raw.raw_json.away_team.name} @ {game.games_raw.raw_json.home_team.name}
-                </h3>
-                <p className="text-sm text-gray-400">
-                  {gameTime.toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit'
-                  })} {timezoneName}
-                </p>
+          <div
+            key={game.game_id}
+            className="group bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700/50 hover:border-orange-500/50 transition-all duration-300 overflow-hidden hover:shadow-xl hover:shadow-orange-500/10"
+          >
+            <div className="p-8">
+              {/* Matchup */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex-1">
+                  <div className="text-2xl font-bold text-slate-200 mb-1">
+                    {game.away_team.name} <span className="text-slate-600">@</span> {game.home_team.name}
+                  </div>
+                  <div className="text-sm text-slate-500 flex items-center gap-2">
+                    <span>📅 {formattedTime}</span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="mb-4">
-              <p className="text-lg font-medium text-blue-400 mb-2">
-                💡 {game.top_insight}
-              </p>
-            </div>
-
-            <div className="flex gap-4 text-sm flex-wrap mb-4">
-              <div>
-                <span className="text-gray-400">AI Pick:</span>
-                <span className="ml-2 font-medium">{cleanPick}</span>
+              {/* AI Insight */}
+              <div className="mb-6 p-4 bg-slate-950/50 rounded-xl border border-orange-900/20">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">💡</span>
+                  <div className="flex-1">
+                    <div className="text-sm text-orange-400 font-semibold mb-1">AI Insight</div>
+                    <p className="text-slate-300 leading-relaxed">{game.top_insight}</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <span className="text-gray-400">Predicted Total:</span>
-                <span className="ml-2 font-medium">{game.predicted_total}</span>
-              </div>
-            </div>
 
-            <div className="pt-4 border-t border-gray-700 flex gap-3">
-              <Link
-                href={`/game/${game.game_id}`}
-                className="flex-1 text-center py-2 text-blue-400 hover:text-blue-300 font-medium transition"
-              >
-                View Full Analysis →
-              </Link>
-              <a 
-                href="https://sportsbook.draftkings.com/" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition whitespace-nowrap"
-              >
-                Place Bet
-              </a>
+              {/* AI Pick & Total */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="p-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
+                  <div className="text-xs text-slate-500 uppercase font-semibold mb-1">AI Pick</div>
+                  <div className="text-xl font-bold text-orange-400">{aiLean}</div>
+                </div>
+                <div className="p-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
+                  <div className="text-xs text-slate-500 uppercase font-semibold mb-1">Predicted Total</div>
+                  <div className="text-xl font-bold text-yellow-400">{game.predicted_total || 'TBD'}</div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <Link
+                  href={`/game/${game.game_id}`}
+                  className="flex-1 py-3 px-6 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-orange-500/50 rounded-lg font-semibold text-center transition group-hover:border-orange-500/50"
+                >
+                  View Full Analysis →
+                </Link>
+                <button className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20">
+                  Place Bet
+                </button>
+              </div>
             </div>
           </div>
         )
