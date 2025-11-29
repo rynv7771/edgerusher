@@ -3,7 +3,7 @@ import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia'
+  apiVersion: '2025-11-17.clover'
 })
 
 const supabase = createClient(
@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
     const session = event.data.object as Stripe.Checkout.Session
     const { userId, credits } = session.metadata!
 
-    // Add credits to user account
     const { data: existing } = await supabase
       .from('user_credits')
       .select('balance')
