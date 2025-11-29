@@ -5,10 +5,12 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Header from '../components/Header'
 import ReactMarkdown from 'react-markdown'
+import Link from 'next/link'
 
 export default function ProChat() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [credits, setCredits] = useState(0)
   const [query, setQuery] = useState('')
   const [messages, setMessages] = useState<any[]>([])
   const [isAsking, setIsAsking] = useState(false)
@@ -25,11 +27,29 @@ export default function ProChat() {
       return
     }
     setUser(user)
+    await loadCredits(user.id)
     setLoading(false)
+  }
+
+  const loadCredits = async (userId: string) => {
+    const { data } = await supabase
+      .from('user_credits')
+      .select('balance')
+      .eq('user_id', userId)
+      .single()
+    
+    setCredits(data?.balance || 0)
   }
 
   const handleAsk = async () => {
     if (!query.trim() || isAsking) return
+
+    // Check credits
+    if (credits < 10) {
+      alert('Insufficient credits! You need 10 credits per query.')
+      router.push('/get-credits')
+      return
+    }
 
     const userMessage = { role: 'user', content: query }
     setMessages(prev => [...prev, userMessage])
@@ -58,6 +78,9 @@ export default function ProChat() {
         models: data.models 
       }
       setMessages(prev => [...prev, aiMessage])
+      
+      // Reload credits after successful query
+      await loadCredits(user.id)
     } catch (error: any) {
       const errorMessage = { 
         role: 'assistant', 
@@ -83,13 +106,30 @@ export default function ProChat() {
       <Header />
 
       <div className="container mx-auto px-4 py-8 max-w-5xl">
+        {/* Title & Credits */}
         <div className="text-center mb-8">
           <h1 className="text-5xl font-black mb-4 bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-500 bg-clip-text text-transparent">
             NFL Pro Chat ⚡
           </h1>
-          <p className="text-slate-400 text-lg">
+          <p className="text-slate-400 text-lg mb-4">
             Ask anything about this week's NFL games. Powered by AI + Live Data.
           </p>
+          
+          {/* Credit Balance */}
+          <div className="inline-flex items-center gap-4 bg-slate-800 border border-orange-900/20 rounded-xl px-6 py-3">
+            <div className="text-orange-400 font-bold text-lg">
+              💰 {credits} Credits
+            </div>
+            <div className="text-slate-500 text-sm">
+              ({Math.floor(credits / 10)} queries left)
+            </div>
+            <Link 
+              href="/get-credits"
+              className="px-4 py-2 bg-orange-600 hover:bg-orange-500 rounded-lg text-sm font-semibold transition"
+            >
+              Get More
+            </Link>
+          </div>
         </div>
 
         <div className="mb-8 space-y-6 min-h-[400px]">
@@ -97,6 +137,7 @@ export default function ProChat() {
             <div className="text-center py-16">
               <div className="text-6xl mb-6">🏈</div>
               <p className="text-slate-400 text-xl mb-4">Ask your first NFL question!</p>
+              <p className="text-slate-500 text-sm mb-6">Each query costs 10 credits</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {[
                   "Who should I bet on this week?",
@@ -175,10 +216,10 @@ export default function ProChat() {
             />
             <button
               onClick={handleAsk}
-              disabled={!query.trim() || isAsking}
+              disabled={!query.trim() || isAsking || credits < 10}
               className="px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-xl font-bold transition shadow-lg shadow-orange-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isAsking ? 'Asking...' : 'Ask'}
+              {isAsking ? 'Asking...' : credits < 10 ? 'No Credits' : 'Ask'}
             </button>
           </div>
         </div>

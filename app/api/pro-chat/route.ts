@@ -44,27 +44,42 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Check credits
+    const { data: userCredits } = await supabase
+      .from('user_credits')
+      .select('balance')
+      .eq('user_id', userId)
+      .single()
+
+    if (!userCredits || userCredits.balance < 10) {
+      return NextResponse.json(
+        { error: 'Insufficient credits' },
+        { status: 402 }
+      )
+    }
+
+    // Deduct 10 credits
+    await supabase
+      .from('user_credits')
+      .update({
+        balance: userCredits.balance - 10,
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', userId)
+
     // Fetch this week's NFL games from database
-    const { data: games, error: gamesError } = await supabase
+    const { data: games } = await supabase
       .from('games_raw')
       .select('*')
       .order('game_time', { ascending: true })
       .limit(30)
 
-    if (gamesError) {
-      console.error('Error fetching games:', gamesError)
-    }
-
     // Fetch AI analysis from database
-    const { data: aiOutputs, error: aiError } = await supabase
+    const { data: aiOutputs } = await supabase
       .from('ai_outputs')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(10)
-
-    if (aiError) {
-      console.error('Error fetching AI outputs:', aiError)
-    }
 
     // Build context with actual NFL data
     let nflContext = '\n\n=== CURRENT WEEK NFL GAMES ===\n\n'
@@ -120,7 +135,7 @@ export async function POST(request: NextRequest) {
       fetchGemini(enhancedQuery)
     ])
 
-    // Combine responses with premium branding
+    // Combine responses
     let combinedResponse = ''
     const models = []
 
@@ -140,6 +155,15 @@ export async function POST(request: NextRequest) {
     }
 
     if (models.length === 0) {
+      // Refund credits if all models failed
+      await supabase
+        .from('user_credits')
+        .update({
+          balance: userCredits.balance,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', userId)
+      
       throw new Error('All AI models failed to respond')
     }
 
