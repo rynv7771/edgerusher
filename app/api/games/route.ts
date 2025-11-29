@@ -18,9 +18,9 @@ export async function GET() {
 
     if (error) throw error
 
-    return NextResponse.json({ games: data || [] })
+    return NextResponse.json(data || [])
   } catch (error) {
     console.error('Error fetching games:', error)
-    return NextResponse.json({ games: [], error: 'Failed to fetch games' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch games' }, { status: 500 })
   }
 }
