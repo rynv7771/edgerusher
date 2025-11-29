@@ -125,7 +125,7 @@ export default function GameDetailPage() {
           </p>
 
           {/* CTA Box */}
-          <div className="p-6 bg-gradient-to-r from-orange-600/20 to-orange-500/20 border border-orange-500/50 rounded-xl flex items-center justify-between">
+          <div className="p-6 bg-gradient-to-r from-orange-600/20 to-orange-500/20 border border-orange-500/50 rounded-xl flex flex-col md:flex-row items-stretch md:items-center gap-4">
             <div>
               <div className="font-bold text-xl text-white">Ready to place your bet?</div>
               <div className="text-orange-300 text-sm">Use our AI analysis to bet smarter</div>
@@ -134,7 +134,7 @@ export default function GameDetailPage() {
               href="https://sportsbook.draftkings.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 whitespace-nowrap"
+              className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 w-full md:w-auto"
             >
               Place Bet →
             </a>
