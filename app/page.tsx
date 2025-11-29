@@ -8,8 +8,11 @@ export default function Home() {
       <header className="border-b border-gray-800">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-3xl">🥾</span>
-            <span className="text-2xl font-bold">Betting Boots</span>
+            <img
+              src="/logo.png"
+              alt="Betting Boots"
+              className="h-12 w-auto"
+            />
           </Link>
           <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition">
             Sign In
