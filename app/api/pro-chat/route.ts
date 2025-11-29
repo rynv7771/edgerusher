@@ -43,7 +43,6 @@ export async function POST(request: NextRequest) {
     let nflContext = '\n\n=== CURRENT WEEK NFL GAMES ===\n\n'
     
     if (games && games.length > 0) {
-      // Separate upcoming and completed games
       const upcomingGames = games.filter((g: any) => g.raw_json?.status === 'pre')
       const completedGames = games.filter((g: any) => g.raw_json?.status === 'post')
       
@@ -87,30 +86,30 @@ export async function POST(request: NextRequest) {
 
     const enhancedQuery = `${query}\n\nUSE THE FOLLOWING REAL NFL DATA TO ANSWER:\n${nflContext}`
 
-    // Multi-model AI responses with NFL context
-    const [openaiResponse, claudeResponse, geminiResponse] = await Promise.allSettled([
+    // Multi-model AI responses
+    const [response1, response2, response3] = await Promise.allSettled([
       fetchOpenAI(enhancedQuery),
       fetchClaude(enhancedQuery),
       fetchGemini(enhancedQuery)
     ])
 
-    // Combine responses
+    // Combine responses with premium branding
     let combinedResponse = ''
     const models = []
 
-    if (openaiResponse.status === 'fulfilled') {
-      combinedResponse += `## OpenAI Analysis\n\n${openaiResponse.value}\n\n`
-      models.push('OpenAI')
+    if (response1.status === 'fulfilled') {
+      combinedResponse += `## Advanced Analytics Engine\n\n${response1.value}\n\n`
+      models.push('Advanced Analytics')
     }
 
-    if (claudeResponse.status === 'fulfilled') {
-      combinedResponse += `## Claude Analysis\n\n${claudeResponse.value}\n\n`
-      models.push('Claude')
+    if (response2.status === 'fulfilled') {
+      combinedResponse += `## Deep Learning Analysis\n\n${response2.value}\n\n`
+      models.push('Deep Learning')
     }
 
-    if (geminiResponse.status === 'fulfilled') {
-      combinedResponse += `## Gemini Analysis\n\n${geminiResponse.value}\n\n`
-      models.push('Gemini')
+    if (response3.status === 'fulfilled') {
+      combinedResponse += `## Neural Network Insights\n\n${response3.value}\n\n`
+      models.push('Neural Network')
     }
 
     if (models.length === 0) {
@@ -119,7 +118,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       response: combinedResponse,
-      models
+      models: ['Multi-Model AI Fusion'] // Single badge instead of listing all models
     })
 
   } catch (error: any) {
