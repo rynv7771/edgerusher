@@ -6,6 +6,33 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+const SPREAD_EDUCATION = `
+UNDERSTANDING NFL SPREADS (CRITICAL):
+
+The spread represents the expected margin of victory.
+- "Patriots -9" means Patriots must win by 10+ points for that bet to win
+- "Giants +9" means Giants can lose by 8 or less (or win outright) for that bet to win
+- Your job: Determine if the favorite will exceed the spread or fall short of it
+
+REFRAME EVERY GAME:
+Instead of "Who will win?", ask:
+- "Will the favorite win by MORE than the spread?" = Bet the favorite
+- "Will the margin be LESS than the spread?" = Bet the underdog
+
+EXAMPLE:
+Eagles -7 vs Bears +7
+- Don't ask: "Will Eagles win?" (probably yes)
+- Ask: "Will Eagles win by 8+ points?" (much less certain)
+- If you think Eagles win 24-20 (4 pts), the answer is NO → Bet Bears +7
+
+CALIBRATION:
+- In a typical week, underdogs cover 40-50% of spreads
+- If you're picking favorites in 90%+ of games, you're miscalibrated
+- Look for spots where the favorite wins but doesn't cover
+
+Focus on MARGIN OF VICTORY relative to the line, not just who wins.
+`
+
 export async function POST(request: NextRequest) {
   try {
     const { query, userId } = await request.json()
@@ -118,7 +145,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       response: combinedResponse,
-      models: ['Multi-Model AI Fusion'] // Single badge instead of listing all models
+      models: ['Multi-Model AI Fusion']
     })
 
   } catch (error: any) {
@@ -145,7 +172,11 @@ async function fetchOpenAI(query: string): Promise<string> {
       messages: [
         {
           role: 'system',
-          content: 'You are an NFL betting expert. Analyze the REAL current week games provided. Reference actual teams, spreads, and records. Give specific, actionable betting insights.'
+          content: `You are an expert NFL betting analyst specializing in point spread analysis.
+
+${SPREAD_EDUCATION}
+
+Analyze the REAL current week games provided. Reference actual teams, spreads, and records. Give specific, actionable betting insights focused on spread coverage, not just picking winners.`
         },
         {
           role: 'user',
@@ -182,7 +213,11 @@ async function fetchClaude(query: string): Promise<string> {
       messages: [
         {
           role: 'user',
-          content: `You are an NFL betting expert. Use the REAL game data with actual spreads and team records. ${query}`
+          content: `You are an expert NFL betting analyst specializing in point spread analysis.
+
+${SPREAD_EDUCATION}
+
+Use the REAL game data with actual spreads and team records. Focus on margin of victory and spread coverage, not just picking winners. ${query}`
         }
       ]
     })
@@ -210,7 +245,11 @@ async function fetchGemini(query: string): Promise<string> {
       body: JSON.stringify({
         contents: [{
           parts: [{
-            text: `You are an NFL betting expert. Use the REAL game data provided. ${query}`
+            text: `You are an expert NFL betting analyst specializing in point spread analysis.
+
+${SPREAD_EDUCATION}
+
+Use the REAL game data provided. Focus on spread coverage and margin of victory, not just picking winners. ${query}`
           }]
         }]
       })
