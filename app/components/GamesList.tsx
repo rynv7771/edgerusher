@@ -49,7 +49,7 @@ export default function GamesList() {
   }
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4 md:gap-6">
       {games.map((game) => {
         const gameTime = new Date(game.game_time + 'Z')
         const formattedTime = gameTime.toLocaleString('en-US', {
@@ -64,57 +64,60 @@ export default function GamesList() {
         const aiLean = game.ai_lean?.replace(/^Lean:\s*/i, '') || 'Analysis pending'
 
         return (
-          <div
-            key={game.game_id}
-            className="group bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700/50 hover:border-orange-500/50 transition-all duration-300 overflow-hidden hover:shadow-xl hover:shadow-orange-500/10"
+          <div 
+            key={game.game_id} 
+            className="group bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl md:rounded-2xl border border-slate-700/50 hover:border-orange-500/50 transition-all duration-300 overflow-hidden hover:shadow-xl hover:shadow-orange-500/10"
           >
-            <div className="p-8">
+            <div className="p-4 md:p-8">
               {/* Matchup */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex-1">
-                  <div className="text-2xl font-bold text-slate-200 mb-1">
-                    {game.away_team.name} <span className="text-slate-600">@</span> {game.home_team.name}
-                  </div>
-                  <div className="text-sm text-slate-500 flex items-center gap-2">
-                    <span>📅 {formattedTime}</span>
-                  </div>
+              <div className="mb-4 md:mb-6">
+                <div className="text-xl md:text-2xl font-bold text-slate-200 mb-1">
+                  {game.away_team.name} <span className="text-slate-600">@</span> {game.home_team.name}
+                </div>
+                <div className="text-xs md:text-sm text-slate-500">
+                  📅 {formattedTime}
                 </div>
               </div>
 
               {/* AI Insight */}
-              <div className="mb-6 p-4 bg-slate-950/50 rounded-xl border border-orange-900/20">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">💡</span>
-                  <div className="flex-1">
-                    <div className="text-sm text-orange-400 font-semibold mb-1">AI Insight</div>
-                    <p className="text-slate-300 leading-relaxed">{game.top_insight}</p>
+              <div className="mb-4 md:mb-6 p-3 md:p-4 bg-slate-950/50 rounded-lg md:rounded-xl border border-orange-900/20">
+                <div className="flex items-start gap-2 md:gap-3">
+                  <span className="text-xl md:text-2xl">💡</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs md:text-sm text-orange-400 font-semibold mb-1">AI Insight</div>
+                    <p className="text-sm md:text-base text-slate-300 leading-relaxed">{game.top_insight}</p>
                   </div>
                 </div>
               </div>
 
               {/* AI Pick & Total */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="p-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
+              <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="p-3 md:p-4 bg-slate-950/50 rounded-lg md:rounded-xl border border-slate-700/50">
                   <div className="text-xs text-slate-500 uppercase font-semibold mb-1">AI Pick</div>
-                  <div className="text-xl font-bold text-orange-400">{aiLean}</div>
+                  <div className="text-base md:text-xl font-bold text-orange-400">{aiLean}</div>
                 </div>
-                <div className="p-4 bg-slate-950/50 rounded-xl border border-slate-700/50">
+                <div className="p-3 md:p-4 bg-slate-950/50 rounded-lg md:rounded-xl border border-slate-700/50">
                   <div className="text-xs text-slate-500 uppercase font-semibold mb-1">Predicted Total</div>
-                  <div className="text-xl font-bold text-yellow-400">{game.predicted_total || 'TBD'}</div>
+                  <div className="text-base md:text-xl font-bold text-yellow-400">{game.predicted_total || 'TBD'}</div>
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <Link
+              {/* Action Buttons - Stacked on mobile, side-by-side on desktop */}
+              <div className="flex flex-col md:flex-row gap-3">
+                <Link 
                   href={`/game/${game.game_id}`}
-                  className="flex-1 py-3 px-6 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-orange-500/50 rounded-lg font-semibold text-center transition group-hover:border-orange-500/50"
+                  className="w-full md:flex-1 py-3 px-4 md:px-6 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-orange-500/50 rounded-lg font-semibold text-center transition group-hover:border-orange-500/50 text-sm md:text-base"
                 >
                   View Full Analysis →
                 </Link>
-                <button className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20">
+                <a 
+                  href="https://sportsbook.draftkings.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full md:w-auto px-6 md:px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 text-center text-sm md:text-base"
+                >
                   Place Bet
-                </button>
+                </a>
               </div>
             </div>
           </div>
