@@ -125,19 +125,21 @@ export default function GameDetailPage() {
           </p>
 
           {/* CTA Box */}
-          <div className="p-6 bg-gradient-to-r from-orange-600/20 to-orange-500/20 border border-orange-500/50 rounded-xl flex flex-col md:flex-row items-stretch md:items-center gap-4">
-            <div>
-              <div className="font-bold text-xl text-white">Ready to place your bet?</div>
-              <div className="text-orange-300 text-sm">Use our AI analysis to bet smarter</div>
+          <div className="p-6 md:p-8 bg-gradient-to-r from-orange-600/20 to-orange-500/20 border border-orange-500/50 rounded-xl">
+            <div className="flex flex-col gap-4">
+              <div className="text-center md:text-left">
+                <div className="font-bold text-2xl md:text-xl text-white mb-2">Ready to place your bet?</div>
+                <div className="text-orange-300 text-base md:text-sm">Use our AI analysis to bet smarter</div>
+              </div>
+              <a
+                href="https://sportsbook.draftkings.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 text-center text-lg"
+              >
+                Place Bet on DraftKings →
+              </a>
             </div>
-            <a
-              href="https://sportsbook.draftkings.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 w-full md:w-auto"
-            >
-              Place Bet →
-            </a>
           </div>
         </div>
 
@@ -263,7 +265,7 @@ export default function GameDetailPage() {
         <div className="bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl p-8 text-center shadow-xl shadow-orange-500/20">
           <h3 className="text-3xl font-black mb-3">Ready to Place Your Bet?</h3>
           <p className="mb-6 text-orange-100 text-lg">Use our AI analysis to make smarter betting decisions</p>
-          <a
+
             href="https://sportsbook.draftkings.com/"
             target="_blank"
             rel="noopener noreferrer"
