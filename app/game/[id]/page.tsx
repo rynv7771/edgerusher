@@ -116,7 +116,7 @@ export default function GameDetailPage() {
                 <div className="text-orange-300 text-base md:text-sm">Use our AI analysis to bet smarter</div>
               </div>
               <a href="https://sportsbook.draftkings.com/" target="_blank" rel="noopener noreferrer" className="w-full px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 text-center text-lg">
-                Place Bet on DraftKings
+                Place Bet →
               </a>
             </div>
           </div>
@@ -225,7 +225,7 @@ export default function GameDetailPage() {
           <h3 className="text-3xl font-black mb-3">Ready to Place Your Bet?</h3>
           <p className="mb-6 text-orange-100 text-lg">Use our AI analysis to make smarter betting decisions</p>
           <a href="https://sportsbook.draftkings.com/" target="_blank" rel="noopener noreferrer" className="inline-block px-10 py-4 bg-white text-orange-600 hover:bg-slate-100 rounded-lg font-bold transition text-lg shadow-lg">
-            Place Bet on DraftKings
+            Place Bet →
           </a>
         </div>
       </div>
