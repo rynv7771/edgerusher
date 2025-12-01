@@ -116,7 +116,7 @@ export default function GamesList() {
                   rel="noopener noreferrer"
                   className="w-full md:w-auto px-6 md:px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 text-center text-sm md:text-base"
                 >
-                  Analyze
+                  Get Edge
                 </a>
               </div>
             </div>
