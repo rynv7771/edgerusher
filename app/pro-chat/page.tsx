@@ -140,7 +140,7 @@ export default function ProChat() {
               <p className="text-slate-500 text-sm mb-6">Each query costs 10 credits</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {[
-                  "Who should I bet on this week?",
+                  "Which team has the edge this week?",
                   "What's the best value play Sunday?",
                   "Analyze the Lions vs Bears game",
                   "Which unders look good this week?"
@@ -210,7 +210,7 @@ export default function ProChat() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleAsk()}
-              placeholder="Ask about any NFL game, player, or betting angle..."
+              placeholder="Ask about any NFL game, player, or matchup..."
               disabled={isAsking}
               className="flex-1 px-6 py-4 bg-slate-900 border border-orange-900/20 rounded-xl focus:border-orange-500 focus:outline-none text-white placeholder-slate-500 disabled:opacity-50"
             />

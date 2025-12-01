@@ -53,7 +53,7 @@ export default function SignUp() {
         maxWidth: '400px'
       }}>
         <h1 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-          Sign Up for BettingBoots
+          Sign Up for EdgeRusher
         </h1>
 
         {error && (

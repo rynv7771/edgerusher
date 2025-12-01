@@ -10,7 +10,7 @@ const SPREAD_EDUCATION = `
 UNDERSTANDING NFL SPREADS (CRITICAL):
 
 The spread represents the expected margin of victory.
-- "Patriots -9" means Patriots must win by 10+ points for that bet to win
+- "Patriots -9" means Patriots must win by 10+ points to cover the spread
 - "Giants +9" means Giants can lose by 8 or less (or win outright) for that bet to win
 - Your job: Determine if the favorite will exceed the spread or fall short of it
 

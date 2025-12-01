@@ -85,7 +85,7 @@ export default function GameDetailPage() {
       <header className="border-b border-orange-900/20 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
-            <img src="/boot-icon.png" alt="Betting Boots" className="h-12 w-auto" />
+            <img src="/boot-icon.png" alt="EdgeRusher" className="h-12 w-auto" />
           </Link>
           <button className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20">
             Sign In
@@ -112,11 +112,11 @@ export default function GameDetailPage() {
           <div className="p-6 md:p-8 bg-gradient-to-r from-orange-600/20 to-orange-500/20 border border-orange-500/50 rounded-xl">
             <div className="flex flex-col gap-4">
               <div className="text-center md:text-left">
-                <div className="font-bold text-2xl md:text-xl text-white mb-2">Ready to place your bet?</div>
-                <div className="text-orange-300 text-base md:text-sm">Use our AI analysis to bet smarter</div>
+                <div className="font-bold text-2xl md:text-xl text-white mb-2">Ready to get the edge?</div>
+                <div className="text-orange-300 text-base md:text-sm">Use our AI analysis to make smarter picks</div>
               </div>
               <a href="https://sportsbook.draftkings.com/" target="_blank" rel="noopener noreferrer" className="w-full px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 rounded-lg font-bold transition shadow-lg shadow-orange-500/20 text-center text-lg">
-                Place Bet →
+                Get Analysis →
               </a>
             </div>
           </div>
@@ -156,7 +156,7 @@ export default function GameDetailPage() {
         <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700/50 p-8 mb-6">
           <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
             <div className="h-1 w-8 bg-gradient-to-r from-orange-500 to-yellow-500"></div>
-            Betting Angles
+            Key Insights
           </h2>
           <div className="space-y-4">
             {game.angles.map((angle, index) => (
@@ -223,9 +223,9 @@ export default function GameDetailPage() {
 
         <div className="bg-gradient-to-r from-orange-600 to-orange-500 rounded-2xl p-8 text-center shadow-xl shadow-orange-500/20">
           <h3 className="text-3xl font-black mb-3">Ready to Place Your Bet?</h3>
-          <p className="mb-6 text-orange-100 text-lg">Use our AI analysis to make smarter betting decisions</p>
+          <p className="mb-6 text-orange-100 text-lg">Use our AI analysis to make smarter game decisions</p>
           <a href="https://sportsbook.draftkings.com/" target="_blank" rel="noopener noreferrer" className="inline-block px-10 py-4 bg-white text-orange-600 hover:bg-slate-100 rounded-lg font-bold transition text-lg shadow-lg">
-            Place Bet →
+            Get Analysis →
           </a>
         </div>
       </div>

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BettingBoots - AI NFL Betting Analysis",
-  description: "AI-powered NFL betting insights and analysis to help you make smarter picks",
+  title: "EdgeRusher - AI NFL Game Analysis",
+  description: "AI-powered NFL game analysis and insights to give you the competitive edge",
 };
 
 export default function RootLayout({

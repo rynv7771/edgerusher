@@ -36,7 +36,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
           <img
             src="/boot-icon.png"
-            alt="Betting Boots"
+            alt="EdgeRusher"
             className="h-12 w-auto"
           />
         </Link>
