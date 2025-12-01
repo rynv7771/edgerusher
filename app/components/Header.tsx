@@ -35,9 +35,9 @@ export default function Header() {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
           <img
-            src="/boot-icon.png"
+            src="/icon-only.png"
             alt="EdgeRusher"
-            className="h-12 w-auto"
+            className="h-16 w-auto"
           />
         </Link>
 
