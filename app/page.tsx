@@ -11,7 +11,7 @@ export default function Home() {
           <div className="flex justify-center mb-8">
             <img 
               src="/logo-horizontal.png" 
-              alt="Betting Boots" 
+              alt="EDGE RUSHER" 
               className="h-32 md:h-40 w-auto"
             />
           </div>        <div className="container mx-auto px-4">
@@ -19,11 +19,11 @@ export default function Home() {
             <span className="text-orange-400 font-semibold">⚡ AI-Powered Analysis</span>
           </div>
           <h1 className="text-6xl md:text-7xl font-black mb-6 bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-500 bg-clip-text text-transparent">
-            Smarter NFL Betting
+            Smarter NFL Analysis
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Get AI-powered insights, betting angles, and predictions for every NFL game.
-            <span className="text-orange-400"> Make smarter bets.</span>
+            Get AI-powered insights, key insights, and predictions for every NFL game.
+            <span className="text-orange-400"> Get the competitive edge.</span>
           </p>
         </div>
       </section>
@@ -43,7 +43,7 @@ export default function Home() {
       <section className="py-24 border-t border-orange-900/20">
         <div className="container mx-auto px-4 max-w-5xl">
           <h2 className="text-4xl font-black text-center mb-16">
-            Why <span className="text-orange-400">Betting Boots?</span>
+            Why <span className="text-orange-400">EDGE RUSHER?</span>
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="p-8 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-orange-900/20 hover:border-orange-500/50 transition">
@@ -67,7 +67,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-12 border-t border-orange-900/20 text-center text-slate-500">
-        <p>© 2025 Betting Boots. AI-Powered NFL Analysis.</p>
+        <p>© 2025 EDGE RUSHER. AI-Powered NFL Analysis.</p>
       </footer>
     </div>
   )
