@@ -12,7 +12,7 @@ export default function Home() {
             <img 
               src="/logo-horizontal.png" 
               alt="EDGE RUSHER" 
-              className="h-32 md:h-40 w-auto"
+              className="h-48 md:h-64 w-auto"
             />
           </div>        <div className="container mx-auto px-4">
           <div className="inline-block mb-6 px-6 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full">
