@@ -60,7 +60,7 @@ class NFLDataPipeline:
         }
     
     def fetch_espn_data(self, week: int = None) -> Dict:
-        """Fetch current week's games from ESPN"""
+        """Fetch upcoming week's games from ESPN"""
         
         if self.use_mock_data:
             print("📦 Using mock data...")
@@ -68,6 +68,37 @@ class NFLDataPipeline:
                 return json.load(f)
         
         try:
+            if not week:
+                # Auto-detect: find the week with upcoming games
+                # Try current week from ESPN, then check if games are upcoming
+                base_url = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+                response = requests.get(base_url, timeout=10)
+                response.raise_for_status()
+                data = response.json()
+                
+                current_week = data.get('week', {}).get('number', 13)
+                
+                # Check if any games are in the future
+                events = data.get('events', [])
+                now = datetime.now(timezone.utc)
+                
+                has_upcoming = False
+                for event in events:
+                    game_date_str = event.get('date')
+                    if game_date_str:
+                        game_date = datetime.fromisoformat(game_date_str.replace('Z', '+00:00'))
+                        if game_date > now:
+                            has_upcoming = True
+                            break
+                
+                if not has_upcoming:
+                    # No upcoming games in current week, move to next
+                    week = current_week + 1
+                    print(f"📅 Week {current_week} has no upcoming games, fetching Week {week}")
+                else:
+                    week = current_week
+                    print(f"📅 Week {week} has upcoming games")
+            
             if week:
                 url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={self.season_year}&seasontype=2&week={week}"
             else:
