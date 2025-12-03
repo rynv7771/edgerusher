@@ -148,9 +148,6 @@ Since no spread is posted yet, predict what the spread should be and explain you
 
 RESPOND IN THIS FORMAT:
 
-TOP_INSIGHT:
-[One sentence - the key factor in this game]
-
 SUMMARY:
 [2-3 paragraphs on both teams, form, matchup factors]
 
@@ -158,15 +155,20 @@ SPREAD_ANALYSIS:
 [Answer the critical question: Will the favorite cover or will the underdog cover?]
 [Explain your expected margin of victory and how it compares to the spread]
 
+AI_LEAN:
+[Your pick: Either the favorite with the spread, or the underdog with the spread]
+[Format: "Patriots -9" or "Giants +9" or "Under 45.5"]
+
+TOP_INSIGHT:
+[One sentence explaining WHY your AI_LEAN pick makes sense - support your recommendation]
+[If you picked the underdog, explain their path to covering]
+[If you picked the favorite, explain why they'll exceed the spread]
+
 PREDICTED_LINE:
 [Format: "TEAM +/-X.X" - Your prediction of what the spread should be]
 
 PREDICTED_TOTAL:
 [Just the number, e.g., "45.5"]
-
-AI_LEAN:
-[Your pick: Either the favorite with the spread, or the underdog with the spread]
-[Format: "Patriots -9" or "Giants +9" or "Under 45.5"]
 
 ANGLES:
 - [Specific betting angle 1]
